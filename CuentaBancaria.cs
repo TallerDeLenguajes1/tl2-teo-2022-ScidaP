@@ -5,31 +5,29 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ConsoleApp2 {
+    enum tipoDeExtraccion {
+        Cajero_Automatico,
+        Cajero_Humano
+    }
     class CuentaBancaria {
         private int codigo;
         private string nombreCliente;
         private float cantidadPlata;
-        private string tipoCuenta;
         private tipoDeExtraccion tipoExtraccion;
-
-        static string[] tipoDeCuenta = { "Caja_ahorro_pesos", "Cuenta_corriente_pesos", "Cuenta_corriente_dolares" };
 
         public int Codigo { get => codigo; set => codigo = value; }
         public string NombreCliente { get => nombreCliente; set => nombreCliente = value; }
         public float CantidadPlata { get => cantidadPlata; set => cantidadPlata = value; }
-        public string TipoCuenta { get => tipoCuenta; set => tipoCuenta = value; }
         private tipoDeExtraccion TipoExtraccion { get => tipoExtraccion; set => tipoExtraccion = value; }
 
-        enum tipoDeExtraccion {
-            Cajero_Automatico,
-            Cajero_Humano
+        public CuentaBancaria() {
+
         }
 
-        public CuentaBancaria(int codigo, string nombreCliente, float cantidadPlata, int tipoCuenta) {
+        public CuentaBancaria(int codigo, string nombreCliente, float cantidadPlata) {
             Codigo = codigo;
             NombreCliente = nombreCliente;
             CantidadPlata = cantidadPlata;
-            TipoCuenta = tipoDeCuenta[tipoCuenta];
         }
 
 
@@ -37,18 +35,46 @@ namespace ConsoleApp2 {
             this.CantidadPlata += cant;
         }
 
-        public void Extraccion(float cant, tipoDeExtraccion tipo) {
-            switch(this.TipoCuenta) {
-                case "Cuenta_corriente_pesos":
+        public virtual float Extraccion(float cant, tipoDeExtraccion tipo);
+    }
 
-                    break;
-                case "Cuenta_corriente_dolares":
-
-                    break;
-                case "Caja_ahorro_pesos":
-
-                    break;
+    internal class AhorroEnPesos : CuentaBancaria {
+        public override float Extraccion(float cant, tipoDeExtraccion tipo) {
+            if (this.CantidadPlata == 0) {
+                return 0;
+            } else {
+                if (tipo == tipoDeExtraccion.Cajero_Automatico) {
+                    if (cant <= 1000) {
+                        this.CantidadPlata -= cant;
+                        return cant;
+                    } else {
+                        Console.WriteLine("Error al extraer de cuenta ahorro en pesos: Máximo $10.000.");
+                        return 0;
+                    }
+                } else {
+                    this.CantidadPlata -= cant;
+                    return cant;
+                }
             }
         }
     }
+
+    class CorrienteDolares: CuentaBancaria {
+        public override float Extraccion(float cant, tipoDeExtraccion tipo) {
+            if (tipo == tipoDeExtraccion.Cajero_Automatico) {
+                if (cant <= 200) {
+                    this.CantidadPlata -= cant;
+                    return cant;
+                } else {
+                    Console.WriteLine("Error al extrar dolares por cajero automatico: max 200");
+                    return 0;
+                }
+            } else {
+                this.CantidadPlata -= cant;
+                return cant;
+            }
+        }
+    }
+
+
 }
