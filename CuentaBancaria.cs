@@ -38,8 +38,14 @@ namespace ConsoleApp2 {
         }
 
         public void Extraccion(float cant, tipoDeExtraccion tipo) {
-            switch(tipo) {
-                case 0:
+            switch(this.TipoCuenta) {
+                case "Cuenta_corriente_pesos":
+
+                    break;
+                case "Cuenta_corriente_dolares":
+
+                    break;
+                case "Caja_ahorro_pesos":
 
                     break;
             }
