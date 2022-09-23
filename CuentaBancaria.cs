@@ -76,5 +76,27 @@ namespace ConsoleApp2 {
         }
     }
 
+    class CorrientePesos: CuentaBancaria {
+        public override float Extraccion(float cant, tipoDeExtraccion tipo) {
+            //Chequeo que no se exceda la deuda de 5000
+            if (this.CantidadPlata - cant <= -5000) {
+                Console.WriteLine("Error: se excede el limite de $5000 en deuda.");
+                return 0;
+            } else {
+                if (tipo == tipoDeExtraccion.Cajero_Automatico) {
+                    if (cant > 20000) {
+                        Console.WriteLine("Error: No se puede extraer más de 20000 por cajero automatico en cta cte pesos");
+                        return 0;
+                    } else {
+                        this.CantidadPlata -= cant;
+                        return cant;
+                    }
+                } else {
+                    this.CantidadPlata -= cant;
+                    return cant;
+                }
+            }
+        }
+    }
 
 }
